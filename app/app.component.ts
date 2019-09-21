@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { map, tap, switchMap, filter, debounceTime } from 'rxjs/operators';
+import { map, tap, switchMap, filter, debounceTime, retry } from 'rxjs/operators';
 
 const URL= `https://swapi.co/api/people/?search=`
 
@@ -28,6 +28,7 @@ export class AppComponent {
     filter(text => text.length>2),
     switchMap((text) => {
       return this.http.get(`${URL}${text}`).pipe(
+        retry(5),
         switchMap((data: any) => {
           console.log(data);
           return of(data.results);
