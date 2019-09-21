@@ -24,7 +24,6 @@ Objectives:
 export class AppComponent {
   myInput = new FormControl;
   results$ = this.myInput.valueChanges.pipe(
-    filter(text => text.length>2),
     switchMap((text) => {
       return this.http.get(`${URL}${text}`).pipe(
         switchMap((data: any) => {
