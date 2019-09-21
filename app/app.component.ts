@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { map, tap, switchMap, filter } from 'rxjs/operators';
+import { map, tap, switchMap, filter, debounceTime } from 'rxjs/operators';
 
 const URL= `https://swapi.co/api/people/?search=`
 
@@ -24,6 +24,7 @@ Objectives:
 export class AppComponent {
   myInput = new FormControl;
   results$ = this.myInput.valueChanges.pipe(
+    debounceTime(500),
     filter(text => text.length>2),
     switchMap((text) => {
       return this.http.get(`${URL}${text}`).pipe(
