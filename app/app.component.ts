@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap, filter } from 'rxjs/operators';
 
-// URL: `https://swapi.co/api/people/?search=${v}`
+const URL= `https://swapi.co/api/people/?search=`
 
 /*
 Objectives:
@@ -24,7 +24,16 @@ Objectives:
 export class AppComponent {
   myInput = new FormControl;
   results$ = this.myInput.valueChanges.pipe(
-    tap()
+    filter(text => text.length>2),
+    switchMap((text) => {
+      return this.http.get(`${URL}${text}`).pipe(
+        switchMap((data: any) => {
+          console.log(data);
+          return of(data.results);
+        })
+      ) 
+    }),
+    
   );
 
   constructor(private http: HttpClient) {}
